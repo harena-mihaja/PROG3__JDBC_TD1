@@ -1,4 +1,5 @@
 import java.time.Instant;
+import java.util.Objects;
 
 public class Product {
     private int id;
@@ -49,6 +50,18 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return getId() == product.getId() && Objects.equals(getName(), product.getName()) && Objects.equals(getCreationDatetime(), product.getCreationDatetime()) && Objects.equals(getCategory(), product.getCategory());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getCreationDatetime(), getCategory());
     }
 
     @Override

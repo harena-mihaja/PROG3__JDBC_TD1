@@ -19,12 +19,13 @@ public class DataRetriever {
         category = null;
         try(Connection conn = dbConnection.getDBConnection()) {
             PreparedStatement st = conn.prepareStatement(query);
-            ResultSet rs = st.executeQuery();
-            while(rs.next()){
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                category = new Category(id, name);
-                categoryList.add(category);
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String name = rs.getString("name");
+                    category = new Category(id, name);
+                    categoryList.add(category);
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -34,32 +35,33 @@ public class DataRetriever {
 
     public List<Product> getProductList (int page, int size) {
         String query;
-        int calculatedOffset;
+        int offset;
         List<Product> productList;
         Product product;
         Category category;
 
         query = "SELECT pr.id, pr.name, pr.creation_datetime, pc.id AS pci, pc.name as pcn FROM product pr INNER JOIN product_category pc on pr.id = pc.product_id LIMIT ? OFFSET ?;";
-        calculatedOffset = (page - 1) * size;
+        offset = (page - 1) * size;
         productList = new ArrayList<>();
         product = null;
         category = null;
         try(Connection conn = dbConnection.getDBConnection()) {
             PreparedStatement st = conn.prepareStatement(query);
             st.setInt(1, size);
-            st.setInt(2, calculatedOffset);
-            ResultSet rs = st.executeQuery();
-            while(rs.next()){
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                Instant creationDatetime = rs.getTimestamp("creation_datetime")
-                        .toInstant();
-                int pci = rs.getInt("pci");
-                String pcn = rs.getString("pcn");
-                category = new Category(pci, pcn);
-                product = new Product(id, name, creationDatetime, category);
-                productList.add(product);
-            }
+            st.setInt(2, offset);
+           try (ResultSet rs = st.executeQuery()) {
+               while (rs.next()) {
+                   int id = rs.getInt("id");
+                   String name = rs.getString("name");
+                   Instant creationDatetime = rs.getTimestamp("creation_datetime")
+                           .toInstant();
+                   int pci = rs.getInt("pci");
+                   String pcn = rs.getString("pcn");
+                   category = new Category(pci, pcn);
+                   product = new Product(id, name, creationDatetime, category);
+                   productList.add(product);
+               }
+           }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
