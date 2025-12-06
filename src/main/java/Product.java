@@ -8,11 +8,11 @@ public class Product {
 
     public Product(){}
     
-    public Product(Category category, Instant creationDatetime, int id, String name) {
-        this.category = category;
-        this.creationDatetime = creationDatetime;
+    public Product(int id, String name, Instant creationDatetime, Category category) {
         this.id = id;
         this.name = name;
+        this.creationDatetime = creationDatetime;
+        this.category = category;
     }
 
     public String getCategoryName(){
