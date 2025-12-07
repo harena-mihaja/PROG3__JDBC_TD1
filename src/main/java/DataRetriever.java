@@ -85,8 +85,8 @@ public class DataRetriever {
         }
         if(creationMax != null && creationMin != null){
             sb.append(" AND creation_datetime >= ? AND creation_datetime <= ?");
-            parameters.add(creationMin);
-            parameters.add(creationMax);
+            parameters.add(Timestamp.from(creationMin));
+            parameters.add(Timestamp.from(creationMax));
         }
         return sb;
     }
