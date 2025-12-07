@@ -74,13 +74,13 @@ public class DataRetriever {
     private StringBuilder getStringBuilder(String productName, String categoryName, Instant creationMin, Instant creationMax, List<Object> parameters){
 
         StringBuilder sb;
-        sb = new StringBuilder("SELECT pr.id, pr.name, pr.creation_datetime, pc.id AS pci, pc.name as pcn FROM product pr INNER JOIN product_category pc on pr.id = pc.product_id WHERE 1=1");
+        sb = new StringBuilder("SELECT pr.id, pr.name, pr.creation_datetime, pc.id , pc.name FROM product pr INNER JOIN product_category pc on pr.id = pc.product_id WHERE 1=1");
         if (productName != null){
             sb.append(" AND pr.name ILIKE ?");
             parameters.add("%" + productName + "%");
         }
         if (categoryName != null){
-            sb.append( "AND pcn ILIKE ?");
+            sb.append( " AND pc.name ILIKE ?");
             parameters.add("%" + categoryName + "%");
         }
         if(creationMax != null && creationMin != null){
@@ -113,12 +113,12 @@ public class DataRetriever {
         Product product;
         try (ResultSet rs = st.executeQuery()){
             while (rs.next()){
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                Instant creationDatetime = rs.getTimestamp("creation_datetime")
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
+                Instant creationDatetime = rs.getTimestamp(3)
                         .toInstant();
-                int pci = rs.getInt("pci");
-                String pcn = rs.getString("pcn");
+                int pci = rs.getInt(4);
+                String pcn = rs.getString(5);
                 category = new Category(pci, pcn);
                 product = new Product(id, name, creationDatetime, category);
                 productList.add(product);
