@@ -11,7 +11,7 @@ public class DataRetriever {
         List<Category> categoryList;
         Category category;
 
-        query = "SELECT id, name FROM product_category";
+        query = "SELECT id, name FROM product_category ORDER BY id";
         categoryList = new ArrayList<>();
         try (Connection conn = dbConnection.getDBConnection()) {
             PreparedStatement st = conn.prepareStatement(query);
@@ -34,7 +34,7 @@ public class DataRetriever {
         int offset;
         List<Product> productList;
 
-        query = "SELECT pr.id, pr.name, pr.creation_datetime, pc.id AS pci, pc.name as pcn FROM product pr INNER JOIN product_category pc on pr.id = pc.product_id LIMIT ? OFFSET ?";
+        query = "SELECT pr.id, pr.name, pr.creation_datetime, pc.id AS pci, pc.name as pcn FROM product pr INNER JOIN product_category pc on pr.id = pc.product_id ORDER BY pr.id LIMIT ? OFFSET ?";
         offset = (page - 1) * size;
         productList = new ArrayList<>();
         try (Connection conn = dbConnection.getDBConnection()) {
@@ -72,8 +72,8 @@ public class DataRetriever {
     }
 
     private StringBuilder getStringBuilder(String productName, String categoryName, Instant creationMin, Instant creationMax, List<Object> parameters){
-
         StringBuilder sb;
+
         sb = new StringBuilder("SELECT pr.id, pr.name, pr.creation_datetime, pc.id , pc.name FROM product pr INNER JOIN product_category pc on pr.id = pc.product_id WHERE 1=1");
         if (productName != null){
             sb.append(" AND pr.name ILIKE ?");
@@ -88,12 +88,14 @@ public class DataRetriever {
             parameters.add(Timestamp.from(creationMin));
             parameters.add(Timestamp.from(creationMax));
         }
+        sb.append(" ORDER BY pr.id");
         return sb;
     }
 
     private List<Product> getProducts(StringBuilder sb, List<Object> parameters) {
         String query;
         List<Product> productList;
+
         query = sb.toString();
         productList = new ArrayList<>();
         try(Connection conn = dbConnection.getDBConnection()) {
@@ -111,6 +113,7 @@ public class DataRetriever {
     private void productMapping(List<Product> productList, PreparedStatement st) throws SQLException {
         Category category;
         Product product;
+
         try (ResultSet rs = st.executeQuery()){
             while (rs.next()){
                 int id = rs.getInt(1);
