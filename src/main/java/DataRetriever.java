@@ -13,7 +13,7 @@ public class DataRetriever {
 
         query = "SELECT id, name FROM product_category";
         categoryList = new ArrayList<>();
-        try(Connection conn = dbConnection.getDBConnection()) {
+        try (Connection conn = dbConnection.getDBConnection()) {
             PreparedStatement st = conn.prepareStatement(query);
             try (ResultSet rs = st.executeQuery()) {
                 while (rs.next()) {
@@ -37,7 +37,7 @@ public class DataRetriever {
         query = "SELECT pr.id, pr.name, pr.creation_datetime, pc.id AS pci, pc.name as pcn FROM product pr INNER JOIN product_category pc on pr.id = pc.product_id LIMIT ? OFFSET ?";
         offset = (page - 1) * size;
         productList = new ArrayList<>();
-        try(Connection conn = dbConnection.getDBConnection()) {
+        try (Connection conn = dbConnection.getDBConnection()) {
             PreparedStatement st = conn.prepareStatement(query);
             st.setInt(1, size);
             st.setInt(2, offset);
@@ -49,11 +49,31 @@ public class DataRetriever {
     }
 
     public List<Product> getProductsByCriteria(String productName, String categoryName, Instant creationMin, Instant creationMax){
+        List<Object> parameters;
         StringBuilder sb;
-        String query;
-        List<Product> productList;
-        List<Object> parameters = new ArrayList<>();
 
+        parameters = new ArrayList<>();
+        sb = getStringBuilder(productName, categoryName, creationMin, creationMax, parameters);
+        return (getProducts(sb, parameters));
+    }
+
+    public List<Product> getProductsByCriteria(String productName, String categoryName, Instant creationMin, Instant creationMax, int page, int size){
+        int offset;
+        List<Object> parameters;
+        StringBuilder sb;
+
+        parameters = new ArrayList<>();
+        sb = getStringBuilder(productName, categoryName, creationMin, creationMax, parameters);
+        sb.append(" LIMIT ? OFFSET ?");
+        offset = (page - 1) * size;
+        parameters.add(size);
+        parameters.add(offset);
+        return (getProducts(sb, parameters));
+    }
+
+    private StringBuilder getStringBuilder(String productName, String categoryName, Instant creationMin, Instant creationMax, List<Object> parameters){
+
+        StringBuilder sb;
         sb = new StringBuilder("SELECT pr.id, pr.name, pr.creation_datetime, pc.id AS pci, pc.name as pcn FROM product pr INNER JOIN product_category pc on pr.id = pc.product_id WHERE 1=1");
         if (productName != null){
             sb.append(" AND pr.name ILIKE ?");
@@ -68,6 +88,12 @@ public class DataRetriever {
             parameters.add(creationMin);
             parameters.add(creationMax);
         }
+        return sb;
+    }
+
+    private List<Product> getProducts(StringBuilder sb, List<Object> parameters) {
+        String query;
+        List<Product> productList;
         query = sb.toString();
         productList = new ArrayList<>();
         try(Connection conn = dbConnection.getDBConnection()) {
