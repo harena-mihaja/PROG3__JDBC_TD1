@@ -15,6 +15,8 @@ public class Main {
         System.out.println(dataRetriever.getProductsByCriteria("iPhone", "mobile", null, null));
         System.out.println(dataRetriever.getProductsByCriteria(null, null, Instant.parse("2024-02-01T00:00:00Z"), Instant.parse("2024-03-01T00:00:00Z")));
         System.out.println(dataRetriever.getProductsByCriteria("Samsung", "bureau", null, null));
+        System.out.println(dataRetriever.getProductsByCriteria("Sony", "Informatique", null, null));
+        System.out.println(dataRetriever.getProductsByCriteria(null, "audio", Instant.parse("2024-01-01T00:00:00Z"), Instant.parse("2024-12-01T00:00:00Z")));
         System.out.println(dataRetriever.getProductsByCriteria(null, null, null,  null));
 
         System.out.println(dataRetriever.getProductsByCriteria(null, null, null, null, 1, 10));
