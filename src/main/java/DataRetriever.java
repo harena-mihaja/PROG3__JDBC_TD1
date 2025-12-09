@@ -1,3 +1,6 @@
+import model.Category;
+import model.Product;
+
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;

@@ -1,3 +1,5 @@
+package model;
+
 import java.time.Instant;
 import java.util.Objects;
 
@@ -48,7 +50,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
+        return "model.Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", creationDatetime=" + creationDatetime +

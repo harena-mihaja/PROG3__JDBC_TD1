@@ -1,3 +1,5 @@
+package model;
+
 import java.util.Objects;
 
 public class Category {
@@ -31,7 +33,7 @@ public class Category {
 
     @Override
     public String toString() {
-        return "Category{" +
+        return "model.Category{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
