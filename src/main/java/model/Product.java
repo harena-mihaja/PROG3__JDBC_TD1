@@ -66,11 +66,10 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", creationDatetime=" + creationDatetime +
-                ", category=" + category +
-                '}';
+        return "# Product:"
+                + "\n - id: " + id
+                + "\n - name: " + name
+                + "\n - creation: " + creationDatetime
+                + "\n *" + category;
     }
 }
