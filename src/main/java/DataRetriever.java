@@ -37,7 +37,11 @@ public class DataRetriever {
         int offset;
         List<Product> productList;
 
-        query = "SELECT pr.id, pr.name, pr.creation_datetime, pc.id AS pci, pc.name as pcn FROM product pr INNER JOIN product_category pc on pr.id = pc.product_id ORDER BY pr.id LIMIT ? OFFSET ?";
+        query ="""
+                SELECT pr.id, pr.name, pr.creation_datetime,pc.id AS pci, pc.name as pcn FROM product pr
+                INNER JOIN product_category pc on pr.id = pc.product_id
+                ORDER BY pr.id LIMIT ? OFFSET ?
+                """;
         offset = (page - 1) * size;
         productList = new ArrayList<>();
         try (Connection conn = dbConnection.getDBConnection()) {
@@ -76,8 +80,13 @@ public class DataRetriever {
 
     private StringBuilder getStringBuilder(String productName, String categoryName, Instant creationMin, Instant creationMax, List<Object> parameters){
         StringBuilder sb;
+        String query = """
+                SELECT pr.id, pr.name, pr.creation_datetime, pc.id , pc.name FROM product pr
+                INNER JOIN product_category pc on pr.id = pc.product_id
+                WHERE 1=1
+                """;
 
-        sb = new StringBuilder("SELECT pr.id, pr.name, pr.creation_datetime, pc.id , pc.name FROM product pr INNER JOIN product_category pc on pr.id = pc.product_id WHERE 1=1");
+        sb = new StringBuilder(query);
         if (productName != null){
             sb.append(" AND pr.name ILIKE ?");
             parameters.add("%" + productName + "%");
