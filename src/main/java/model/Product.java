@@ -4,10 +4,10 @@ import java.time.Instant;
 import java.util.Objects;
 
 public class Product {
-    private final int id;
-    private final String name;
-    private final Instant creationDatetime;
-    private final Category category;
+    private int id;
+    private String name;
+    private Instant creationDatetime;
+    private Category category;
 
     public Product(int id, String name, Instant creationDatetime, Category category) {
         this.id = id;
@@ -36,6 +36,22 @@ public class Product {
         return name;
     }
 
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void setCreationDatetime(Instant creationDatetime) {
+        this.creationDatetime = creationDatetime;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -50,7 +66,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "model.Product{" +
+        return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", creationDatetime=" + creationDatetime +
