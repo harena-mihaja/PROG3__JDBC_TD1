@@ -1,7 +1,7 @@
 CREATE TABLE Product (
     id integer primary key,
     name varchar(255) not null,
-    price numeric not null,
+    price numeric(10,2) not null,
     creation_datetime timestamp default current_timestamp not null
 );
 
